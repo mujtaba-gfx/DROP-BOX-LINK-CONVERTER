@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert Dropbox share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
+    <title>Dropbox Link Converter | Direct Download Link Generator</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #cccccc;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+            word-wrap: break-word;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Dropbox Link Converter</h1>
+    <p>Convert your Dropbox share link into a direct download link easily and quickly.</p>
+    <input type="text" id="dropboxLink" placeholder="Enter Dropbox share link">
+    <button onclick="convertLink()">Convert</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function convertLink() {
+        const shareLink = document.getElementById('dropboxLink').value;
+        if (!shareLink) {
+            document.getElementById('result').innerText = 'Please enter a Dropbox share link.';
+            return;
+        }
+
+        let directLink = shareLink.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+        directLink = directLink.replace('/scl/fi/', '/s/');
+        if (directLink.includes('?dl=0')) {
+            directLink = directLink.replace('?dl=0', '');
+        }
+
+        document.getElementById('result').innerHTML = `<strong>Direct Download Link:</strong> <br><a href="${directLink}" target="_blank">${directLink}</a>`;
+    }
+</script>
+
+</body>
+</html>
