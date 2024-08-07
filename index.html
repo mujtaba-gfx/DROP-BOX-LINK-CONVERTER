@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert Dropbox share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
-    <title>Dropbox Link Converter | Direct Download Link Generator</title>
+    <meta name="description" content="Convert MediaFire and Dropbox share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
+    <title>Prime Link | Direct Download Link Generator</title>
     <style>
         body {
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -51,6 +51,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
+            margin: 5px;
         }
         button:hover {
             background-color: #0056b3;
@@ -73,28 +74,50 @@
 <body>
 
 <div class="container">
-    <h1>Dropbox Link Converter</h1>
-    <p>Convert your Dropbox share link into a direct download link easily and quickly.</p>
-    <input type="text" id="dropboxLink" placeholder="Enter Dropbox share link">
+    <h1>Prime Link Converter</h1>
+    <p>Convert your Dropbox and MediaFire share links into direct download links easily and quickly.</p>
+    <input type="text" id="linkInput" placeholder="Enter Dropbox or MediaFire share link">
     <button onclick="convertLink()">Convert</button>
+    <button onclick="copyLink()" id="copyButton" style="display:none;">Copy Link</button>
     <div class="result" id="result"></div>
 </div>
 
 <script>
     function convertLink() {
-        const shareLink = document.getElementById('dropboxLink').value;
+        const shareLink = document.getElementById('linkInput').value;
         if (!shareLink) {
-            document.getElementById('result').innerText = 'Please enter a Dropbox share link.';
+            document.getElementById('result').innerText = 'Please enter a share link.';
             return;
         }
 
-        let directLink = shareLink.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-        directLink = directLink.replace('/scl/fi/', '/s/');
-        if (directLink.includes('?dl=0')) {
-            directLink = directLink.replace('?dl=0', '');
+        let directLink = '';
+        if (shareLink.includes('dropbox.com')) {
+            directLink = shareLink.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+            directLink = directLink.replace('/scl/fi/', '/s/');
+            if (directLink.includes('?dl=0')) {
+                directLink = directLink.replace('?dl=0', '');
+            }
+        } else if (shareLink.includes('mediafire.com')) {
+            // For MediaFire links, we'll use a placeholder as direct link generation needs fetching
+            directLink = shareLink.replace('file', 'download');
+            // Placeholder for direct link
+            // Note: MediaFire requires additional server-side processing for true direct download links.
+        } else {
+            document.getElementById('result').innerText = 'Unsupported link type.';
+            return;
         }
 
         document.getElementById('result').innerHTML = `<strong>Direct Download Link:</strong> <br><a href="${directLink}" target="_blank">${directLink}</a>`;
+        document.getElementById('copyButton').style.display = 'inline-block';
+    }
+
+    function copyLink() {
+        const linkText = document.querySelector('#result a').href;
+        navigator.clipboard.writeText(linkText).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+        });
     }
 </script>
 
