@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert MediaFire and Dropbox share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
-    <title>Prime Link | Direct Download Link Generator</title>
+    <meta name="description" content="Convert Dropbox, Google Drive, and MediaFire share links into direct download links with our easy-to-use tool. Also, shorten URLs for better management.">
+    <title>Prime Link | Multi Tool Converter</title>
     <style>
         body {
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -75,9 +75,10 @@
 
 <div class="container">
     <h1>Prime Link Converter</h1>
-    <p>Convert your Dropbox and MediaFire share links into direct download links easily and quickly.</p>
-    <input type="text" id="linkInput" placeholder="Enter Dropbox or MediaFire share link">
+    <p>Convert your Dropbox, Google Drive, and MediaFire share links into direct download links easily and quickly. Shorten your URLs for better management.</p>
+    <input type="text" id="linkInput" placeholder="Enter share link or URL to shorten">
     <button onclick="convertLink()">Convert</button>
+    <button onclick="shortenURL()">Shorten URL</button>
     <button onclick="copyLink()" id="copyButton" style="display:none;">Copy Link</button>
     <div class="result" id="result"></div>
 </div>
@@ -98,10 +99,15 @@
                 directLink = directLink.replace('?dl=0', '');
             }
         } else if (shareLink.includes('mediafire.com')) {
-            // For MediaFire links, we'll use a placeholder as direct link generation needs fetching
             directLink = shareLink.replace('file', 'download');
-            // Placeholder for direct link
-            // Note: MediaFire requires additional server-side processing for true direct download links.
+        } else if (shareLink.includes('drive.google.com')) {
+            const fileId = shareLink.match(/[-\w]{25,}/);
+            if (fileId) {
+                directLink = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+            } else {
+                document.getElementById('result').innerText = 'Invalid Google Drive link.';
+                return;
+            }
         } else {
             document.getElementById('result').innerText = 'Unsupported link type.';
             return;
@@ -109,6 +115,31 @@
 
         document.getElementById('result').innerHTML = `<strong>Direct Download Link:</strong> <br><a href="${directLink}" target="_blank">${directLink}</a>`;
         document.getElementById('copyButton').style.display = 'inline-block';
+    }
+
+    function shortenURL() {
+        const longURL = document.getElementById('linkInput').value;
+        if (!longURL) {
+            document.getElementById('result').innerText = 'Please enter a URL to shorten.';
+            return;
+        }
+
+        // Use a URL shortening service API
+        fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(longURL)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    const shortLink = data.result.full_short_link;
+                    document.getElementById('result').innerHTML = `<strong>Shortened URL:</strong> <br><a href="${shortLink}" target="_blank">${shortLink}</a>`;
+                    document.getElementById('copyButton').style.display = 'inline-block';
+                } else {
+                    document.getElementById('result').innerText = 'Error shortening URL.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = 'Error shortening URL.';
+                console.error('Error:', error);
+            });
     }
 
     function copyLink() {
