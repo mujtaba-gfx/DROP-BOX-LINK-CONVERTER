@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert MediaFire and Dropbox share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
+    <meta name="description" content="Convert MediaFire, Dropbox, and Google Drive share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
     <title>Prime Link | Direct Download Link Generator</title>
     <style>
         body {
@@ -75,8 +75,8 @@
 
 <div class="container">
     <h1>Prime Link Converter</h1>
-    <p>Convert your Dropbox and MediaFire share links into direct download links easily and quickly.</p>
-    <input type="text" id="linkInput" placeholder="Enter Dropbox or MediaFire share link">
+    <p>Convert your Dropbox, MediaFire, and Google Drive share links into direct download links easily and quickly.</p>
+    <input type="text" id="linkInput" placeholder="Enter Dropbox, MediaFire, or Google Drive share link">
     <button onclick="convertLink()">Convert</button>
     <button onclick="copyLink()" id="copyButton" style="display:none;">Copy Link</button>
     <div class="result" id="result"></div>
@@ -102,6 +102,16 @@
             directLink = shareLink.replace('file', 'download');
             // Placeholder for direct link
             // Note: MediaFire requires additional server-side processing for true direct download links.
+        } else if (shareLink.includes('drive.google.com')) {
+            // Google Drive link processing
+            const fileIdMatch = shareLink.match(/\/d\/(.*?)(?:\/|$)/);
+            if (fileIdMatch && fileIdMatch[1]) {
+                const fileId = fileIdMatch[1];
+                directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+            } else {
+                document.getElementById('result').innerText = 'Invalid Google Drive link.';
+                return;
+            }
         } else {
             document.getElementById('result').innerText = 'Unsupported link type.';
             return;
