@@ -1,134 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert MediaFire, Dropbox, and Google Drive share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
-    <title>Prime Link | Direct Download Link Generator</title>
-    <style>
-        body {
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: #333;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        h1 {
-            font-size: 26px;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        p {
-            font-size: 16px;
-            color: #666;
-        }
-        input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #cccccc;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #333;
-            word-wrap: break-word;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Convert MediaFire and Dropbox share links into direct download links with our easy-to-use tool. Perfect for seamless file sharing and download management.">
+<title>Prime Link | Direct Download Link Generator</title>
+<style>
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+    position: relative;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+}
+
+p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #cccccc;
+    margin-bottom: 25px;
+    font-size: 18px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+.result {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #333;
+    word-wrap: break-word;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Popup Styles */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-width: 320px;
+    text-align: center;
+    animation: fadeInPopup 0.8s ease-in-out;
+}
+
+.popup h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 600;
+}
+
+.popup p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.popup button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.popup button:hover {
+    background-color: #218838;
+    transform: translateY(-3px);
+}
+
+.popup a {
+    color: #007bff;
+    text-decoration: none;
+    display: block;
+    margin-top: 15px;
+}
+
+.popup a:hover {
+    text-decoration: underline;
+}
+
+.popup-close {
+    background-color: #ff4757;
+    margin-top: 10px;
+}
+
+.popup-close:hover {
+    background-color: #e04040;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 500;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInPopup {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+</style>
 </head>
 <body>
 
 <div class="container">
     <h1>Prime Link Converter</h1>
-    <p>Convert your Dropbox, MediaFire, and Google Drive share links into direct download links easily and quickly.</p>
-    <input type="text" id="linkInput" placeholder="Enter Dropbox, MediaFire, or Google Drive share link">
+    <p>Convert your Dropbox and MediaFire share links into direct download links easily and quickly.</p>
+    <input type="text" id="linkInput" placeholder="Enter Dropbox or MediaFire share link">
     <button onclick="convertLink()">Convert</button>
     <button onclick="copyLink()" id="copyButton" style="display:none;">Copy Link</button>
     <div class="result" id="result"></div>
 </div>
 
+<!-- Hire Me Popup -->
+<div id="popup" class="popup">
+    <h2>Need a WordPress Expert?</h2>
+    <p>I specialize in WordPress development and can help you build or improve your website. Let's take your online presence to the next level!</p>
+    <button onclick="window.location.href='mailto:work.mujtabahaider@gmail.com?subject=I%20want%20to%20hire%20you'">Hire Me Now</button>
+    <a href="https://www.linkedin.com/in/mujtabahaiderwpdeveloper/" target="_blank">Connect on LinkedIn</a>
+    <button onclick="closePopup()" class="popup-close">Close</button>
+</div>
+<div class="overlay" id="overlay"></div>
+
 <script>
-    function convertLink() {
-        const shareLink = document.getElementById('linkInput').value;
-        if (!shareLink) {
-            document.getElementById('result').innerText = 'Please enter a share link.';
-            return;
-        }
-
-        let directLink = '';
-        if (shareLink.includes('dropbox.com')) {
-            directLink = shareLink.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-            directLink = directLink.replace('/scl/fi/', '/s/');
-            if (directLink.includes('?dl=0')) {
-                directLink = directLink.replace('?dl=0', '');
-            }
-        } else if (shareLink.includes('mediafire.com')) {
-            // For MediaFire links, we'll use a placeholder as direct link generation needs fetching
-            directLink = shareLink.replace('file', 'download');
-            // Placeholder for direct link
-            // Note: MediaFire requires additional server-side processing for true direct download links.
-        } else if (shareLink.includes('drive.google.com')) {
-            // Google Drive link processing
-            const fileIdMatch = shareLink.match(/\/d\/(.*?)(?:\/|$)/);
-            if (fileIdMatch && fileIdMatch[1]) {
-                const fileId = fileIdMatch[1];
-                directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
-            } else {
-                document.getElementById('result').innerText = 'Invalid Google Drive link.';
-                return;
-            }
-        } else {
-            document.getElementById('result').innerText = 'Unsupported link type.';
-            return;
-        }
-
-        document.getElementById('result').innerHTML = `<strong>Direct Download Link:</strong> <br><a href="${directLink}" target="_blank">${directLink}</a>`;
-        document.getElementById('copyButton').style.display = 'inline-block';
+function convertLink() {
+    const shareLink = document.getElementById('linkInput').value;
+    if (!shareLink) {
+        document.getElementById('result').innerText = 'Please enter a share link.';
+        return;
     }
 
-    function copyLink() {
-        const linkText = document.querySelector('#result a').href;
-        navigator.clipboard.writeText(linkText).then(() => {
-            alert('Link copied to clipboard!');
-        }).catch(err => {
-            console.error('Could not copy text: ', err);
-        });
+    let directLink = '';
+    if (shareLink.includes('dropbox.com')) {
+        directLink = shareLink.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+        directLink = directLink.replace('/scl/fi/', '/s/');
+        if (directLink.includes('?dl=0')) {
+            directLink = directLink.replace('?dl=0', '');
+        }
+    } else if (shareLink.includes('mediafire.com')) {
+        directLink = shareLink.replace('file', 'download');
+    } else {
+        document.getElementById('result').innerText = 'Unsupported link type.';
+        return;
     }
+
+    document.getElementById('result').innerHTML = `<strong>Direct Download Link:</strong> <br><a href="${directLink}" target="_blank">${directLink}</a>`;
+    document.getElementById('copyButton').style.display = 'inline-block';
+}
+
+function copyLink() {
+    const linkText = document.querySelector('#result a').href;
+    navigator.clipboard.writeText(linkText).then(() => {
+        alert('Link copied to clipboard!');
+    }).catch(err => {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+function showPopup() {
+    document.getElementById('popup').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
+window.onload = function() {
+    setTimeout(showPopup, 2000); // Show popup 2 seconds after page load
+};
 </script>
 
 </body>
